@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="css/style.css">-->
+    <title>Students</title>
+</head>
+<body>
+    <div class="container show-students-form-wrapper">
+        <form  method="GET" class="show-students-form">
+            <button type="submit">Show list of students</button>
+        </form>
+    </div>
+    <div class="students-container container"></div>
+
+<script>
+    const studentsContainer = document.querySelector('.students-container');
+    const showStudentsForm = document.querySelector('.show-students-form');
+
+    const renderStudents = (students) => {
+        const fragment = document.createDocumentFragment();
+        students.forEach(({Number, Name, Surname}) => {
+            const p = document.createElement('p');
+            p.textContent = Number + ' - ' + Name + ' ' + Surname;
+            const article = document.createElement('article');
+            article.appendChild(p);
+            fragment.appendChild(article);
+        });
+        studentsContainer.appendChild(fragment);
+    };
+
+    const loadData = async (onSuccess, onError) => {
+        try {
+            const response = await fetch('http://localhost:8080/demoServlet_war_exploded/FirstServlet');
+            const students = await response.json();
+            onSuccess(students);
+        } catch (e) {
+            onError();
+        }
+    };
+
+    showStudentsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        loadData(
+            (students) => {
+                renderStudents(students);
+                showStudentsForm.classList.add('visually-hidden');
+            },
+            () => alert('Data loading error!')
+        );
+    });
+
+</script>
+</body>
+</html>

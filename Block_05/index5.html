@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Document</title>
+</head>
+<body>
+<div class="container show-students-form-wrapper">
+    <form  method="GET" class="show-students-form">
+        <button type="submit">Show list of students</button>
+    </form>
+</div>
+<div class="students-container container"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
+
+
+<script>
+    const $studentsContainer = $('.students-container');
+    const $showStudentsForm = $('.show-students-form');
+
+    const loadData = async (onSuccess, onError) => {
+        $.ajax({
+            url: 'http://localhost:8080/demoServlet_war_exploded/FirstServlet'
+        })
+            .done(onSuccess)
+            .fail(onError);
+    };
+    const renderStudents = (students) => {
+        const $fragment = $(document.createDocumentFragment());
+        students.forEach(({Number, Name, Surname}) => {
+            const $article = $('<article/>');
+
+            const $p = $('<p/>').text(Number + ' - ' + Name + ' ' + Surname);
+
+            $article.append($p);
+            $fragment.append($article);
+        });
+        $studentsContainer.append($fragment);
+    };
+
+    $showStudentsForm.submit((e) => {
+        e.preventDefault();
+        loadData(
+            (students) => {
+                renderStudents(students);
+                $showStudentsForm.addClass('visually-hidden');
+            },
+            () => alert('Data loading error!')
+        );
+    });
+
+</script>
+</body>
+</html>

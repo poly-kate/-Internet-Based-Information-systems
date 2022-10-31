@@ -1,2 +1,3 @@
 ## Internet-Based-Information-systems
-Homework for SPbPU
+Домашнее задание по курсу "Программирование веб-приложений"
+СПбПУ
